@@ -46,6 +46,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import com.gmail.justbru00.epic.rename.main.v3.Main;
 
 public class BStats {
 
@@ -92,11 +93,6 @@ public class BStats {
     boolean logErrors = config.getBoolean("logFailedRequests", false);
     boolean logSentData = config.getBoolean("logSentData", false);
     boolean logResponseStatusText = config.getBoolean("logResponseStatusText", false);
-    boolean isFolia = false;
-    try {
-      isFolia = Class.forName("io.papermc.paper.threadedregions.RegionizedServer") != null;
-    } catch (Exception ignored) {
-    }
     metricsBase =
             new // See https://github.com/Bastian/bstats-metrics/pull/126
                     // See https://github.com/Bastian/bstats-metrics/pull/126
@@ -112,9 +108,7 @@ public class BStats {
                     enabled,
                     this::appendPlatformData,
                     this::appendServiceData,
-                    isFolia
-                            ? null
-                            : submitDataTask -> Bukkit.getScheduler().runTask(plugin, submitDataTask),
+                    submitDataTask -> Main.scheduler().runNextTick(wrapped -> submitDataTask.run()),
                     plugin::isEnabled,
                     (message, error) -> this.plugin.getLogger().log(Level.WARNING, message, error),
                     (message) -> this.plugin.getLogger().log(Level.INFO, message),
@@ -124,7 +118,9 @@ public class BStats {
                     false);
   }
 
-  /** Shuts down the underlying scheduler service. */
+  /**
+   * Shuts down the underlying scheduler service.
+   */
   public void shutdown() {
     metricsBase.shutdown();
   }

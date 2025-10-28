@@ -5,6 +5,7 @@ description: Performs different item modifications with easy to use commands.
 authors: [Justin Brubaker,JustBru00,jayoevans]
 softdepend: [Vault]
 api-version: 1.13
+folia-supported: true
 
 commands:
   rename:

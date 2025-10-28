@@ -56,13 +56,12 @@ public class EpicRename implements CommandExecutor {
 							Main.debug = true;
 							Messager.msgSender(Main.getMsgFromConfig("epicrename.debug_enable"), sender);
                         }
-
-                        return true;
                     } else {
 						Messager.msgSender(Main.getMsgFromConfig("epicrename.no_permission"), sender);
-						return true;
-					}
-				} else if (args[0].equalsIgnoreCase("version")) { // End /epicrename debug | Start /epicrename version
+                    }
+
+                    return true;
+                } else if (args[0].equalsIgnoreCase("version")) { // End /epicrename debug | Start /epicrename version
 					Messager.msgSender(Main.getMsgFromConfig("epicrename.version"), sender); 
 					return true;
 				} else { // End /epicrename version | Start /epicrename invalid args

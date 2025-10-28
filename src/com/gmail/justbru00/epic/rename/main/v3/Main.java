@@ -8,10 +8,11 @@ package com.gmail.justbru00.epic.rename.main.v3;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 
 import com.gmail.justbru00.epic.rename.multiversion.ServerVersion;
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.impl.PlatformScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginManager;
@@ -58,6 +59,9 @@ public class Main extends JavaPlugin {
 	public static String PLUGIN_VERSION = null;
 	private static final int BSTATS_PLUGIN_ID = 548;
 
+    private static FoliaLib foliaLib;
+    private static PlatformScheduler scheduler;
+
 	/**
 	 * Default to the method for getting items in hand for MC version 1.9.x+
 	 */
@@ -83,6 +87,14 @@ public class Main extends JavaPlugin {
 
 	public static String prefix = Messager.color("&8[&bEpic&fRename&8] &f");
 
+    public static FoliaLib foliaLib() {
+        return foliaLib;
+    }
+
+    public static PlatformScheduler scheduler() {
+        return scheduler;
+    }
+
 	@Override
 	public void onDisable() {
 		Messager.msgConsole("&cPlugin Disabled.");
@@ -92,6 +104,9 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+
+        foliaLib = new FoliaLib(this);
+        scheduler = foliaLib.getScheduler();
 
 		// Save default yaml files.
 		this.saveDefaultConfig();
