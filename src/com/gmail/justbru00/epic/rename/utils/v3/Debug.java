@@ -1,8 +1,9 @@
 /**
  * @author Justin "JustBru00" Brubaker
- * 
+ *
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.utils.v3;
 
 import org.bukkit.Bukkit;
@@ -19,7 +20,7 @@ public class Debug {
 			}
 		}
 	}
-	
+
 	public static void sendPlain(String msg) {
 		if (Main.debug) {
 			Bukkit.broadcastMessage(Messager.color(Main.prefix + "&8[&cDebug&8] &f") + msg);

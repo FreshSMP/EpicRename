@@ -50,12 +50,10 @@ public class GlowingUtil {
         return itemStack;
     }
 
-    @Deprecated
     /**
-     *
-     * @param itemStack
      * @return ItemStack with glowing removed or null if item is not glowing
      */
+    @Deprecated
     public static ItemStack removeGlowingFromItemLegacy(ItemStack itemStack) {
         ItemMeta im = itemStack.getItemMeta();
 
@@ -86,8 +84,6 @@ public class GlowingUtil {
     }
 
     /**
-     *
-     * @param itemStack
      * @return ItemStack with glowing removed or null if item is not glowing
      */
     public static ItemStack removeGlowingFromItemModern(ItemStack itemStack) {
@@ -213,5 +209,4 @@ public class GlowingUtil {
     public static boolean isLegacyToModernConversionEnabled() {
         return Main.getBooleanFromConfig("convert_legacy_glowing_to_modern_glowing");
     }
-
 }

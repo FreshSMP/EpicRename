@@ -1,8 +1,9 @@
 /**
  * @author Justin "JustBru00" Brubaker
- * 
+ *
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.utils.v3;
 
 import org.bukkit.entity.Player;
@@ -22,31 +23,33 @@ public class EconomyManager {
 	 * @return The {@link EcoMessage}
 	 */
 	public static EcoMessage takeMoney(Player player, EpicRenameCommands erc){
-		
-		if (Main.USE_ECO == false) {
+
+		if (!Main.USE_ECO) {
 			return EcoMessage.ECO_DISABLED;
 		}
-		
+
 		if (player.hasPermission("epicrename.bypass.costs.*")) {
 			if (!Main.getBooleanFromConfig("disable_bypass_messages")) { // Issue #195
 				Messager.msgPlayer(Main.getMsgFromConfig("economy.bypass"), player);
 			}
+
 			return EcoMessage.ECO_BYPASS;
 		}
-		
+
 		if (erc == EpicRenameCommands.RENAME) {
-			
+
 			if (player.hasPermission("epicrename.bypass.costs.rename")) {
 				if (!Main.getBooleanFromConfig("disable_bypass_messages")) { // Issue #195
 					Messager.msgPlayer(Main.getMsgFromConfig("economy.bypass"), player);
 				}
+
 				return EcoMessage.ECO_BYPASS;
 			}
-			
+
 			EconomyResponse r = Main.econ.withdrawPlayer(player, Main.getInstance().getConfig().getInt("economy.costs.rename"));
-			
+
 			Debug.send("Value from config was: " + Main.getInstance().getConfig().getInt("economy.costs.rename"));
-				
+
 			if (r.transactionSuccess()) {
 				Messager.msgPlayer(formatMsg(Main.getMsgFromConfig("economy.transaction_success"), r), player);
 				return EcoMessage.SUCCESS;
@@ -54,18 +57,18 @@ public class EconomyManager {
 				Messager.msgPlayer(formatMsg(Main.getMsgFromConfig("economy.transaction_error"), r), player);
 				return EcoMessage.TRANSACTION_ERROR;
 			}
-		
+
 		} else if (erc == EpicRenameCommands.LORE) {
-			
+
 			if (player.hasPermission("epicrename.bypass.costs.lore")) {
 				if (!Main.getBooleanFromConfig("disable_bypass_messages")) { // Issue #195
 					Messager.msgPlayer(Main.getMsgFromConfig("economy.bypass"), player);
 				}
 				return EcoMessage.ECO_BYPASS;
 			}
-			
+
 			EconomyResponse r = Main.econ.withdrawPlayer(player, Main.getInstance().getConfig().getInt("economy.costs.lore"));
-			
+
 			if (r.transactionSuccess()) {
 				Messager.msgPlayer(formatMsg(Main.getMsgFromConfig("economy.transaction_success"), r), player);
 				return EcoMessage.SUCCESS;
@@ -74,16 +77,16 @@ public class EconomyManager {
 				return EcoMessage.TRANSACTION_ERROR;
 			}
 		} else if (erc == EpicRenameCommands.GLOW) { // ISSUE #101
-			
+
 			if (player.hasPermission("epicrename.bypass.costs.glow")) {
 				if (!Main.getBooleanFromConfig("disable_bypass_messages")) { // Issue #195
 					Messager.msgPlayer(Main.getMsgFromConfig("economy.bypass"), player);
 				}
 				return EcoMessage.ECO_BYPASS;
 			}
-			
+
 			EconomyResponse r = Main.econ.withdrawPlayer(player, Main.getInstance().getConfig().getInt("economy.costs.glow"));
-			
+
 			if (r.transactionSuccess()) {
 				Messager.msgPlayer(formatMsg(Main.getMsgFromConfig("economy.transaction_success"), r), player);
 				return EcoMessage.SUCCESS;
@@ -92,10 +95,10 @@ public class EconomyManager {
 				return EcoMessage.TRANSACTION_ERROR;
 			}
 		} // END ISSUE #101
-		
+
 		return EcoMessage.UNHANDLED;
 	}
-	
+
 	/**
 	 * Formats the message with the {cost} and {error} variables.
 	 * @param msg The message you want to replace the variables in.
@@ -103,9 +106,9 @@ public class EconomyManager {
 	 * @return The formated string with the variables replaced.
 	 */
 	public static String formatMsg(String msg, EconomyResponse r) {		
-		
+
 		msg = msg.replace("{cost}", String.valueOf(r.amount));	
-		
+
 		if (!r.transactionSuccess()) {
 			if (r.errorMessage != null) {
 				msg = msg.replace("{error}", r.errorMessage); 
@@ -113,8 +116,7 @@ public class EconomyManager {
 				msg = msg.replace("{error}", "Economy error message was null. Maybe try checking your balance?");
 			}
 		}
-		
+
 		return msg;
 	}
-	
 }

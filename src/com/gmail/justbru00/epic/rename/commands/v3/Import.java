@@ -1,6 +1,6 @@
 /**
  * @author Justin "JustBru00" Brubaker
- * 
+ *
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
 
@@ -29,7 +29,7 @@ import com.gmail.justbru00.epic.rename.utils.v3.EpicRenameOnlineAPI;
 
 /**
  * Created for #106
- * 
+ *
  * @author Justin Brubaker
  *
  */

@@ -13,7 +13,7 @@ public class FormattingCodeCounterTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return True if test is successful
 	 */
 	public static boolean test() {

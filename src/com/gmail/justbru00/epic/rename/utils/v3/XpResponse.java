@@ -5,14 +5,14 @@ public class XpResponse {
 	private String errorMessage;
 	private Integer xpAmount;
 	private boolean transactionSuccess;
-	
+
 	public XpResponse(String _errorMessage, boolean _transactionSuccess, Integer _xpAmount) {
 		super();
 		transactionSuccess = _transactionSuccess;
 		errorMessage = _errorMessage;
 		xpAmount = _xpAmount;
 	}
-	
+
 	public XpResponse() {
 		super();
 	}
@@ -40,5 +40,4 @@ public class XpResponse {
 	public void setTransactionSuccess(boolean transactionSuccess) {
 		this.transactionSuccess = transactionSuccess;
 	}
-
 }

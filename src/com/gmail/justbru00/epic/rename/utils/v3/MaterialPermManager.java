@@ -8,7 +8,7 @@ import com.gmail.justbru00.epic.rename.enums.v3.EpicRenameCommands;
 public class MaterialPermManager {
 
 	public static final String MATERIAL_PERM = "epicrename.{CMD}.material.{MATERIAL}";
-	
+
 	/**
 	 * Checks if the player has permission for the material provided.
 	 * @param erc The command that is being performed.
@@ -20,14 +20,12 @@ public class MaterialPermManager {
 		// New Permission Checks
 		String newPerm = MATERIAL_PERM.replace("{CMD}", EpicRenameCommands.getStringName(erc)).replace("{MATERIAL}", toCheck.getType().toString());
 		String allNewPerm = MATERIAL_PERM.replace("{CMD}", EpicRenameCommands.getStringName(erc)).replace("{MATERIAL}", "*");
-		
-		//Debug.send("[MaterialPermManager] NewPerm: " + newPerm + " allNewPerm: " + allNewPerm);
-		
+
 		if (p.hasPermission(allNewPerm)) {
 			Debug.send("[MaterialPermManager] The player has permission. Perm: " + allNewPerm);
 			return true;
 		}
-		
+
 		if (p.hasPermission(newPerm)) {
 			Debug.send("[MaterialPermManager] The player has permission. Perm: " + newPerm);
 			return true;

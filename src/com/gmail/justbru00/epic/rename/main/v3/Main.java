@@ -1,6 +1,6 @@
 /**
  * @author Justin "JustBru00" Brubaker
- * 
+ *
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
 package com.gmail.justbru00.epic.rename.main.v3;
@@ -222,7 +222,7 @@ public class Main extends JavaPlugin {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param path Path to the message in messages.yml
 	 * @return The colored string from messages.yml
 	 */

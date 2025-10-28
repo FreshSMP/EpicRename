@@ -1,8 +1,9 @@
 /**
  * @author Justin "JustBru00" Brubaker
- * 
+ *
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.utils.v3;
 
 import org.bukkit.entity.Player;
@@ -23,13 +24,14 @@ public class FormattingPermManager {
 	 * @return True if the player has permission. False if the player doesn't have permission.
 	 */
 	public static boolean checkPerms(EpicRenameCommands erc, String[] args, Player p) {
-		StringBuilder builder = new StringBuilder("");				
+		StringBuilder builder = new StringBuilder();
 		for (String item : args) {
-			builder.append(item + " ");
+			builder.append(item).append(" ");
 		}
+
 		return checkPerms(erc, builder.toString().trim(), p);
 	}
-	
+
 	/**
 	 * Checks the provided players permissions for the color codes in their proposed text.
 	 * @param erc The command this text will be used for.
@@ -43,7 +45,7 @@ public class FormattingPermManager {
 			Messager.msgPlayer(Main.getMsgFromConfig("format_code_permission.&x_color_code_blocked").replace("{code}", "&x"), p);
 			return false;
 		}		
-				
+
 		for (String code : FORMAT_CODES) {
 			String perm = FORMAT_PERM.replace("{CMD}", EpicRenameCommands.getStringName(erc)).replace("{CODE}", code);
 			if (unformattedString.toLowerCase().contains("&" + code)) {
@@ -55,7 +57,7 @@ public class FormattingPermManager {
 				}
 			}
 		}
-		
+
 		// ISSUE #150
 		if (unformattedString.matches(".*&#[0-9a-fA-F]{6}.*")) {
 			String perm = FORMAT_PERM.replace("{CMD}", EpicRenameCommands.getStringName(erc)).replace("{CODE}", "hex");
@@ -66,7 +68,7 @@ public class FormattingPermManager {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 }

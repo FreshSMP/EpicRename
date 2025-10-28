@@ -1,8 +1,9 @@
 /**
  * @author Justin "JustBru00" Brubaker
- * 
+ *
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.utils.v3;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import com.gmail.justbru00.epic.rename.main.v3.Main;
 public class Blacklists {
 
 	// VERSION 3
-	
+
 	/**
 	 * Issue #81
 	 * Checks if the name of the item is one of the ones from the config.
@@ -27,28 +28,23 @@ public class Blacklists {
 	 */
 	public static boolean checkExistingName(Player p) {
 		Debug.send("[Blacklists#checkExistingName(Player)] Method called");
-		
+
 			if (RenameUtil.getInHand(p).getType() == Material.AIR || RenameUtil.getInHand(p) == null) {
 				Debug.send("[Blacklists#checkExistingName(Player)] Item was AIR or NULL");
 				return true;
 			}
-			
+
 			String itemName = RenameUtil.getInHand(p).getItemMeta().getDisplayName();
 			itemName = ChatColor.stripColor(itemName);
-			
-			if (itemName == null) {
-				Debug.send("[Blacklists#checkExistingName(Player)] Item existing name was NULL");
-				return true;
-			}
-			
+
 			for (String blacklistedString : Main.getInstance().getConfig().getStringList("blacklists.existingname")) {
 				if (blacklistedString != null) {
-					
+
 					blacklistedString = ChatColor.stripColor(Messager.color(blacklistedString));
-					
-					if (itemName.toLowerCase().contains(blacklistedString.toLowerCase())) {			
+
+					if (itemName.toLowerCase().contains(blacklistedString.toLowerCase())) {
 						Debug.send("[Blacklists#checkExistingName(Player)] Name contained '" + blacklistedString + "'");
-						
+
 						if (p.hasPermission("epicrename.bypass.existingname")) {
 							// Player has bypass permission
 							Debug.send("[Blacklists#checkExistingName(Player)] Player had the epicrename.bypass.existingname permission.");
@@ -57,17 +53,17 @@ public class Blacklists {
 							} else {
 								Debug.send("Bypass messages are disabled.");
 							}
-							return true;	
-						} 							
-						
-						return false;						
-					} 
-				}				
+							return true;
+						}
+
+						return false;
+					}
+				}
 			}
-			
+
 		return true;
 	}
-	
+
 	/**
 	 * Issue #81
 	 * Checks if the lore of the item is one of the ones from the config file.
@@ -77,27 +73,27 @@ public class Blacklists {
 	 */
 	public static boolean checkExistingLore(Player p) {
 		Debug.send("[Blacklists#checkExistingLore(Player)] Method called");
-		
+
 		if (RenameUtil.getInHand(p).getType() == Material.AIR || RenameUtil.getInHand(p) == null) {
 			Debug.send("[Blacklists#checkExistingLore(Player)] Item was AIR or NULL");
 			return true;
 		}
-		
+
 			List<String> loreLines = RenameUtil.getInHand(p).getItemMeta().getLore();
-			
+
 			if (loreLines == null) {
 				Debug.send("[Blacklists#checkExistingLore(Player)] Lore from existing item was NULL");
 				return true;
 			}
-			
+
 			for (String loreLine : loreLines) {
 				loreLine = ChatColor.stripColor(loreLine);
-				
+
 				for (String blacklistedString : Main.getInstance().getConfig().getStringList("blacklists.existingloreline")) {
 					if (blacklistedString != null) {
-					
+
 						blacklistedString = ChatColor.stripColor(Messager.color(blacklistedString));
-					
+
 						if (loreLine.toLowerCase().contains(blacklistedString.toLowerCase())) {
 							Debug.send("[Blacklists#checkExistingLore(Player)] Lore Line: '"+ loreLine +  "' contained '" + blacklistedString + "'");
 							if (p.hasPermission("epicrename.bypass.existinglore")) {
@@ -110,23 +106,23 @@ public class Blacklists {
 								}
 								return true;
 							} 								
-								
+
 							return false;
 						}
 					}				
 				}
 			}	
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param m The Material from the {@link CommandExecutor}. This will also check is the player has the bypass permission. It will message the player.
 	 * @return True if NO blacklisted material found. False if a blacklisted material is FOUND.
 	 */
 	public static boolean checkMaterialBlacklist(Material m, Player p) {
-		
+
 		// Issue #74
 		if (p.hasPermission("epicrename.bypass.materialblacklist")) {
 			Debug.send("Player just bypassed the material blacklist.");			
@@ -135,10 +131,11 @@ public class Blacklists {
 			} else {
 				Debug.send("Bypass messages are disabled.");
 			}
+
 			return true;
 		}
 		// End issue #74
-		
+
 		for (String s : Main.getInstance().getConfig().getStringList("blacklists.material")) {
 			if (s != null) {
 				if (m == Material.getMaterial(s)) {
@@ -147,16 +144,17 @@ public class Blacklists {
 				}
 			}
 		}
+
 		return true;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param args The arguments from the {@link CommandExecutor}. This will also check is the player has the bypass permission. It will message the player.
 	 * @return True if NO blacklisted word found. False if a blacklisted word is FOUND.
 	 */
 	public static boolean checkTextBlacklist(String[] args, Player p) {
-		
+
 		// Issue #74
 		if (p.hasPermission("epicrename.bypass.textblacklist")) {
 			Debug.send("Player just bypassed the text blacklist.");
@@ -170,21 +168,21 @@ public class Blacklists {
 		}
 		// End issue #74
 		
-		StringBuilder builder = new StringBuilder("");		
-		String completeArgs = "";		
-		
+		StringBuilder builder = new StringBuilder();
+		String completeArgs;
+
 		for (String item : args) {
-			builder.append(item + " ");
+			builder.append(item).append(" ");
 		}
-		
+
 		completeArgs = builder.toString().trim();
 		if (Main.getInstance().getConfig().getBoolean("replace_underscores")) {
 			completeArgs = completeArgs.replace("_", " ");
 			Debug.send("Replaced the underscores.");
 		}
-		
+
 		completeArgs = ChatColor.stripColor(Messager.color(completeArgs));
-		
+
 		for (String s : Main.getInstance().getConfig().getStringList("blacklists.text")) {
 			if (s != null) {
 				if (completeArgs.toLowerCase().contains(s.toLowerCase())) {
@@ -196,5 +194,4 @@ public class Blacklists {
 
 		return true;
 	}
-
 }
