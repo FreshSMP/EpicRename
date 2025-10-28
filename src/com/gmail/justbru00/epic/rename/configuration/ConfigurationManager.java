@@ -18,7 +18,7 @@ public class ConfigurationManager {
 	
 	/**
 	 * Checks the config version number vs the one this version of EpicRename has.
-	 * @return True if it needs updated, false if it doesn't.
+	 * @return True if it needs to be updated, false if it doesn't.
 	 */
 	public static boolean doesConfigYmlNeedUpdated() {
 		if (config == null) {
@@ -27,19 +27,18 @@ public class ConfigurationManager {
 		
 		return config.getInt("config_version") < CONFIG_VERSION;	
 	}
-	
+
 	/**
 	 * Checks the messages.yml version vs the one this version of Epicrename has.
-	 * @return
 	 */
 	public static boolean doesMessagesYmlNeedUpdated() {
 		if (messages == null) {
 			messages = Main.getMessagesYmlFile();
 		}
-		
+
 		return messages.getInt("messages_yml_version") < MESSAGES_VERSION;
 	}
-	
+
 	/**
 	 * Adds any new config values to the config.yml file if the config_version value doesn't match the value of this version of EpicRename.
 	 * These must be set manually in the {@link ConfigUpdater}.
@@ -48,7 +47,7 @@ public class ConfigurationManager {
 	public static void updateConfigYml() {
 		ConfigUpdater.updateConfigYml();
 	}
-	
+
 	/**
 	 * Adds any new messages values to the messages.yml file if the messages_version value doesn't match the value of this version of EpicRename.
 	 * These must be set manually in the {@link ConfigUpdater}.
@@ -57,5 +56,4 @@ public class ConfigurationManager {
 	public static void updateMessagesYml() {
 		ConfigUpdater.updateMessagesYml();
 	}
-	
 }

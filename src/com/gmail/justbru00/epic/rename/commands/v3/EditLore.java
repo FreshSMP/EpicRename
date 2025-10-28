@@ -24,82 +24,82 @@ public class EditLore implements CommandExecutor {
 		if (!command.getName().equalsIgnoreCase("editlore")) {
 			return false;
 		}
-		
+
 		if (!sender.hasPermission("epicrename.editlore")) {
 			Messager.msgSenderWithConfigMsg("editlore.no_permission", sender);
 			return true;
 		}
-		
+
 		if (!(sender instanceof Player)) {
 			Messager.msgSenderWithConfigMsg("editlore.wrong_sender", sender);
 			return true;
 		}
-		
+
 		Player player = (Player) sender;
 		if (!WorldChecker.checkWorld(player)) {
 			Messager.msgSenderWithConfigMsg("editlore.disabled_world", sender);
 			return true;
 		}
-		
+
 		ItemStack inHand = RenameUtil.getInHand(player);
 		Material m = inHand.getType();
-		
+
 		if (!Blacklists.checkMaterialBlacklist(m, player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("editlore.blacklisted_material_found"), player);
 			return true;
 		}
-		
+
 		if (!Blacklists.checkExistingName(player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("editlore.blacklisted_existing_name_found"), player);
 			return true;
 		}
-		
+
 		if (!Blacklists.checkExistingLore(player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("editlore.blacklisted_existing_lore_found"), player);
 			return true;
 		}
-		
+
 		if (!MaterialPermManager.checkPerms(EpicRenameCommands.EDITLORE, inHand, player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("editlore.no_permission_for_material"), player);
 			return true;
 		}
-		
-		if ((m == Material.AIR || m == null)) {
+
+		if (m == Material.AIR) {
 			Messager.msgPlayer(Main.getMsgFromConfig("editlore.cannot_edit_air"), player);		
 			return true;
 		}
-		
+
 		ItemMeta im = inHand.getItemMeta();
 		if (!im.hasLore()) {
 			Messager.msgPlayer(Main.getMsgFromConfig("editlore.no_lore"), player);
 			return true;
 		}	
-		
+
 		StringBuilder loreBuilder = new StringBuilder();
-		
+
 		for (String loreLine : im.getLore()) {
 			Debug.sendPlain("[EditLore] Original: " + loreLine);
 			String normalColorsReversed = Messager.reverseSectionSignTo(loreLine, '&');
 			Debug.sendPlain("[EditLore] Reversed: " + normalColorsReversed);	
 			String hexReversed = Messager.reverseFromXToHex(normalColorsReversed);
 			Debug.sendPlain("[EditLore] Hex Reversal: " + hexReversed);
-			loreBuilder.append(hexReversed + "|");
+			loreBuilder.append(hexReversed).append("|");
 		}
-		
+
 		if (loreBuilder.length() == 0) {
 			Messager.msgPlayer(Main.getMsgFromConfig("editlore.lore_content_empty"), player);
 			return true;
 		}
-		
+
 		String loreArgs = loreBuilder.substring(0, loreBuilder.length() - 1);
 		Debug.sendPlain("[EditLore] Lore Args: " + loreArgs);
-		
+
 		if (label.equalsIgnoreCase("epeditlore")) {
 			Messager.sendCommandSuggestionToPlayer(Main.getMsgFromConfig("editlore.click_to_edit"), "/eplore " + loreArgs, player);
 		} else {
 			Messager.sendCommandSuggestionToPlayer(Main.getMsgFromConfig("editlore.click_to_edit"), "/lore " + loreArgs, player);
-		}		
+		}
+
 		return true;
 	}
-
 }

@@ -57,12 +57,12 @@ public class Main extends JavaPlugin {
 	public static boolean debug = false;
 	public static String PLUGIN_VERSION = null;
 	private static final int BSTATS_PLUGIN_ID = 548;
-	
+
 	/**
 	 * Default to the method for getting items in hand for MC version 1.9.x+
 	 */
 	public static boolean USE_NEW_GET_HAND = true; 
-	
+
 	/**
 	 *  Version is set in checkServerVerison()
 	 */
@@ -70,7 +70,7 @@ public class Main extends JavaPlugin {
 	public static Main plugin;
 	public static PluginFile messages = null;
 	public static PluginFile statsFile = null;
-	
+
 	/**
 	 * Vault economy.
 	 */
@@ -80,7 +80,7 @@ public class Main extends JavaPlugin {
 
 	public static ConsoleCommandSender clogger = Bukkit.getServer().getConsoleSender();
 	public static Logger log = Bukkit.getLogger();
-	
+
 	public static String prefix = Messager.color("&8[&bEpic&fRename&8] &f");
 
 	@Override
@@ -92,16 +92,16 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		
+
 		// Save default yaml files.
 		this.saveDefaultConfig();
 		messages = new PluginFile(this, "messages.yml", "messages.yml");
 		statsFile = new PluginFile(this, "stats.yml"); // Issue #162
-		
+
 		PLUGIN_VERSION = Main.getInstance().getDescription().getVersion();
 
 		Main.debug = getConfig().getBoolean("debug", false);
-		
+
 		checkServerVersion();
 
 		Messager.msgConsole("&bVersion: &c" + PLUGIN_VERSION + " &bMC Version: &c" + MC_VERSION.toString());
@@ -117,7 +117,7 @@ public class Main extends JavaPlugin {
 					". Attempting to add missing values to the config file.");
 			ConfigurationManager.updateConfigYml();
 		}
-		
+
 		if (ConfigurationManager.doesMessagesYmlNeedUpdated()) {
 			Messager.msgConsole("&c[WARN] The messages.yml file version is incorrect. EpicRename v" + PLUGIN_VERSION +
 					" expects a messages.yml version of " + ConfigurationManager.MESSAGES_VERSION + 
@@ -130,7 +130,7 @@ public class Main extends JavaPlugin {
 			USE_ECO = true;
 			Messager.msgConsole("&aEconomy is enabled in the config.");
 		}
-		
+
 		if (Main.getInstance().getConfig().getBoolean("xp.use")) {
 			USE_XP_COST = true;
 			Messager.msgConsole("&aExperience cost is enabled in the config.");
@@ -150,92 +150,72 @@ public class Main extends JavaPlugin {
 		// Command Executors and Tab Completers
 		getCommand("rename").setExecutor(new Rename());
 		getCommand("rename").setTabCompleter(new GenericOneArgTabCompleter("rename", "<name>"));
-		
+
 		getCommand("epicrename").setExecutor(new EpicRename());
 		getCommand("epicrename").setTabCompleter(new EpicRenameTabCompleter());
-		
+
 		getCommand("lore").setExecutor(new Lore());		
 		getCommand("lore").setTabCompleter(new GenericOneArgTabCompleter("lore", "<loreText>"));
-		
+
 		getCommand("setloreline").setExecutor(new SetLoreLine());
 		getCommand("setloreline").setTabCompleter(new GenericTwoArgTabCompleter("setloreline", "<lineNumber>", "<loreText>"));
-		
+
 		getCommand("removeloreline").setExecutor(new RemoveLoreLine());
 		getCommand("removeloreline").setTabCompleter(new GenericOneArgTabCompleter("removeloreline", "<lineNumber>"));
-		
+
 		getCommand("insertloreline").setExecutor(new InsertLoreLine());
 		getCommand("insertloreline").setTabCompleter(new GenericTwoArgTabCompleter("insertloreline", "<beforeLineNumber>", "<loreText>"));
-		
+
 		getCommand("glow").setExecutor(new Glow());
 		getCommand("glow").setTabCompleter(new GenericNoArgsTabCompleter("glow"));
-		
+
 		getCommand("removeglow").setExecutor(new RemoveGlow());
 		getCommand("removeglow").setTabCompleter(new GenericNoArgsTabCompleter("removeglow"));
-		
+
 		getCommand("import").setExecutor(new Import());
 		getCommand("import").setTabCompleter(new ImportTabCompleter());
-		
+
 		getCommand("export").setExecutor(new Export());
 		getCommand("export").setTabCompleter(new ExportTabCompleter());
-		
+
 		getCommand("removename").setExecutor(new RemoveName());
 		getCommand("removename").setTabCompleter(new GenericNoArgsTabCompleter("removename"));
-		
+
 		getCommand("removelore").setExecutor(new RemoveLore());
 		getCommand("removelore").setTabCompleter(new GenericNoArgsTabCompleter("removelore"));
-		
+
 		getCommand("hideenchantments").setExecutor(new HideEnchantments());
 		getCommand("hideenchantments").setTabCompleter(new GenericNoArgsTabCompleter("hideenchantments"));
-		
+
 		getCommand("unhideenchantments").setExecutor(new UnHideEnchantments());
 		getCommand("unhideenchantments").setTabCompleter(new GenericNoArgsTabCompleter("unhideenchantments"));
-		
+
 		getCommand("addloreline").setExecutor(new AddLoreLine());
 		getCommand("addloreline").setTabCompleter(new GenericOneArgTabCompleter("addloreline", "<loreText>"));
-		
+
 		getCommand("editname").setExecutor(new EditName());
 		getCommand("editname").setTabCompleter(new GenericNoArgsTabCompleter("editname"));
 		
 		getCommand("editlore").setExecutor(new EditLore());
 		getCommand("editlore").setTabCompleter(new GenericNoArgsTabCompleter("editlore"));
-		
-		// Start bstats
+
+		// Start bStats
 		BStats bstats = new BStats(this, BSTATS_PLUGIN_ID);
-		
-		bstats.addCustomChart(new BStats.SimplePie("economy_features", new Callable<String>() {
-			
-			@Override
-	        public String call() throws Exception {
-				return Boolean.toString(Main.USE_ECO);
-	        }
-			
-		}));
-		
-		bstats.addCustomChart(new BStats.SimplePie("uses_epicrenameonline_features", new Callable<String>() {
-			
-			@Override
-	        public String call() throws Exception {
-				return Boolean.toString(Main.isEpicRenameOnlineFeaturesUsedBefore());
-	        }
-		
-		}));	
-		
+
+		bstats.addCustomChart(new BStats.SimplePie("economy_features", () -> Boolean.toString(Main.USE_ECO)));
+
+		bstats.addCustomChart(new BStats.SimplePie("uses_epicrenameonline_features", () -> Boolean.toString(Main.isEpicRenameOnlineFeaturesUsedBefore())));
+
 		// ISSUE #152
-		bstats.addCustomChart(new BStats.SimplePie("experience_cost_feature", new Callable<String>() {
-			
-			@Override
-	        public String call() throws Exception {
-				return Boolean.toString(Main.USE_XP_COST);
-	        }
-		
-		}));
-		
+		bstats.addCustomChart(new BStats.SimplePie("experience_cost_feature", () -> Boolean.toString(Main.USE_XP_COST)));
+
 		// Prefix 
 		if (Main.getInstance().getConfig().getString("prefix") != null) {
 			prefix = Messager.color(Main.getInstance().getConfig().getString("prefix"));
 		} else {
 			Messager.msgConsole("&cThe prefix in the config is null. Keeping default instead.");
 		}
+
 		Messager.msgConsole("&aPrefix set to: '" + prefix + "&a'");
 
 		Messager.msgConsole("&aPlugin Enabled!");
@@ -251,6 +231,7 @@ public class Main extends JavaPlugin {
 			Debug.send("[Main#getMsgFromConfig()] A message from messages.yml was NULL. The path to the message is: " + path);
 			return "[ERROR] Could not read value from messages.yml. Ask a server admin to enable /epicrename debug to find the broken value. [ERROR]";
 		}
+
 		return messages.getString(path); // Removed duplicate Messager.color(); Messager#msgXXXX colors the message.
 	}
 	
@@ -269,12 +250,12 @@ public class Main extends JavaPlugin {
 			USE_ECO = true;
 			Messager.msgConsole("&aEconomy is enabled in the config.");
 		}
-		
+
 		if (Main.getInstance().getConfig().getBoolean("xp.use")) {
 			USE_XP_COST = true;
 			Messager.msgConsole("&aXp cost is enabled in the config.");
 		}
-		
+
 		// ISSUE #125 - Prefix not correctly loaded by /epicrename reload
 		if (Main.getInstance().getConfig().getString("prefix") != null) {
 			prefix = Messager.color(Main.getInstance().getConfig().getString("prefix"));
@@ -322,8 +303,6 @@ public class Main extends JavaPlugin {
 
 	/**
 	 * Sets up vault economy.
-	 * 
-	 * @return
 	 */
 	private boolean setupEconomy() {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -331,19 +310,19 @@ public class Main extends JavaPlugin {
 							+ "http://dev.bukkit.org/bukkit-plugins/vault/");
 			return false;
 		}
+
 		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
 			Messager.msgConsole("&cFailed to get the economy details from Vault. Is there a Vault compatible economy plugin installed?");
 			return false;
 		}
+
 		econ = rsp.getProvider();
-		return econ != null;
+		return true;
 	}
 
 	/**
 	 * Gets the stack trace as a String from a Throwable
-	 * @param aThrowable
-	 * @return
 	 */
 	public static String getStackTrace(Throwable aThrowable) {
 	    Writer result = new StringWriter();
@@ -351,11 +330,11 @@ public class Main extends JavaPlugin {
 	    aThrowable.printStackTrace(printWriter);
 	    return result.toString();
 	  }
-	
+
 	public static PluginFile getMessagesYmlFile() {
 		return messages;
 	}
-	
+
 	/**
 	 * Issue #162
 	 * Saves the given value to the stats.yml file.
@@ -375,7 +354,7 @@ public class Main extends JavaPlugin {
 			Debug.send("[Main#setEpicRenameOnlineFeaturesUsedBefore] stats.yml file is null. Are you sure it was able to be saved during onEnable?");
 		}
 	}
-	
+
 	/**
 	 * Issue #162
 	 * Reads the current boolean value of the key epicrenameonline_features_used_before from stats.yml
@@ -386,7 +365,7 @@ public class Main extends JavaPlugin {
 			Debug.send("[Main#isEpicRenameOnlineFeaturesUsedBefore] stats.yml file is null. Are you sure it was able to be saved during onEnable?");
 			return false;
 		}
-		
+
 		if (statsFile.isBoolean("epicrenameonline_features_used_before")) {
 			return statsFile.getBoolean("epicrenameonline_features_used_before");
 		} else {

@@ -12,6 +12,7 @@
  *
  * Violations will result in a ban of your plugin and account from bStats.
  */
+
 package com.gmail.justbru00.epic.rename.main.v3.bstats;
 
 import java.io.BufferedReader;
@@ -72,20 +73,19 @@ public class BStats {
       config.addDefault("logSentData", false);
       config.addDefault("logResponseStatusText", false);
       // Inform the server owners about bStats
-      config
-              .options()
-              .header(
-                      "bStats (https://bStats.org) collects some basic information for plugin authors, like how\n"
-                              + "many people use their plugin and their total player count. It's recommended to keep bStats\n"
-                              + "enabled, but if you're not comfortable with this, you can turn this setting off. There is no\n"
-                              + "performance penalty associated with having metrics enabled, and data sent to bStats is fully\n"
-                              + "anonymous.")
+      config.options().header(
+              "bStats (https://bStats.org) collects some basic information for plugin authors, like how\n"
+                      + "many people use their plugin and their total player count. It's recommended to keep bStats\n"
+                      + "enabled, but if you're not comfortable with this, you can turn this setting off. There is no\n"
+                      + "performance penalty associated with having metrics enabled, and data sent to bStats is fully\n"
+                      + "anonymous.")
               .copyDefaults(true);
       try {
         config.save(configFile);
       } catch (IOException ignored) {
       }
     }
+
     // Load the data
     boolean enabled = config.getBoolean("enabled", true);
     String serverUUID = config.getString("serverUuid");
@@ -95,7 +95,7 @@ public class BStats {
     boolean isFolia = false;
     try {
       isFolia = Class.forName("io.papermc.paper.threadedregions.RegionizedServer") != null;
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
     metricsBase =
             new // See https://github.com/Bastian/bstats-metrics/pull/126
@@ -212,7 +212,7 @@ public class BStats {
      * @param platform The platform of the service.
      * @param serviceId The id of the service.
      * @param serverUuid The server uuid.
-     * @param enabled Whether or not data sending is enabled.
+     * @param enabled Whether data sending is enabled.
      * @param appendPlatformDataConsumer A consumer that receives a {@code JsonObjectBuilder} and
      *     appends all platform-specific data.
      * @param appendServiceDataConsumer A consumer that receives a {@code JsonObjectBuilder} and
@@ -223,10 +223,10 @@ public class BStats {
      * @param checkServiceEnabledSupplier A supplier to check if the service is still enabled.
      * @param errorLogger A consumer that accepts log message and an error.
      * @param infoLogger A consumer that accepts info log messages.
-     * @param logErrors Whether or not errors should be logged.
-     * @param logSentData Whether or not the sent data should be logged.
-     * @param logResponseStatusText Whether or not the response status text should be logged.
-     * @param skipRelocateCheck Whether or not the relocate check should be skipped.
+     * @param logErrors Whether errors should be logged.
+     * @param logSentData Whether the data sent should be logged.
+     * @param logResponseStatusText Whether the response status text should be logged.
+     * @param skipRelocateCheck Whether the relocate check should be skipped.
      */
     public MetricsBase(
             String platform,
@@ -273,6 +273,7 @@ public class BStats {
       if (!skipRelocateCheck) {
         checkRelocation();
       }
+
       if (enabled) {
         // WARNING: Removing the option to opt-out will get your plugin banned from
         // bStats
@@ -351,6 +352,7 @@ public class BStats {
       if (logSentData) {
         infoLogger.accept("Sent bStats metrics data: " + data.toString());
       }
+
       String url = String.format(REPORT_URL, platform);
       HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
       // Compress the data to save bandwidth
@@ -366,6 +368,7 @@ public class BStats {
       try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
         outputStream.write(compressedData);
       }
+
       StringBuilder builder = new StringBuilder();
       try (BufferedReader bufferedReader =
                    new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
@@ -374,6 +377,7 @@ public class BStats {
           builder.append(line);
         }
       }
+
       if (logResponseStatusText) {
         infoLogger.accept("Sent data to bStats and received response: " + builder);
       }
@@ -400,7 +404,7 @@ public class BStats {
     }
 
     /**
-     * Gzips the given string.
+     * GZips the given string.
      *
      * @param str The string to gzip.
      * @return The gzipped string.
@@ -440,19 +444,23 @@ public class BStats {
         // Null = skip the chart
         return null;
       }
+
       boolean allSkipped = true;
       for (Map.Entry<String, int[]> entry : map.entrySet()) {
         if (entry.getValue().length == 0) {
           // Skip this invalid
           continue;
         }
+
         allSkipped = false;
         valuesBuilder.appendField(entry.getKey(), entry.getValue());
       }
+
       if (allSkipped) {
         // Null = skip the chart
         return null;
       }
+
       return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
     }
   }
@@ -479,6 +487,7 @@ public class BStats {
         // Null = skip the chart
         return null;
       }
+
       return new JsonObjectBuilder().appendField("value", value).build();
     }
   }
@@ -506,6 +515,7 @@ public class BStats {
         // Null = skip the chart
         return null;
       }
+
       boolean reallyAllSkipped = true;
       for (Map.Entry<String, Map<String, Integer>> entryValues : map.entrySet()) {
         JsonObjectBuilder valueBuilder = new JsonObjectBuilder();
@@ -514,15 +524,18 @@ public class BStats {
           valueBuilder.appendField(valueEntry.getKey(), valueEntry.getValue());
           allSkipped = false;
         }
+
         if (!allSkipped) {
           reallyAllSkipped = false;
           valuesBuilder.appendField(entryValues.getKey(), valueBuilder.build());
         }
       }
+
       if (reallyAllSkipped) {
         // Null = skip the chart
         return null;
       }
+
       return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
     }
   }
@@ -549,6 +562,7 @@ public class BStats {
         // Null = skip the chart
         return null;
       }
+
       return new JsonObjectBuilder().appendField("value", value).build();
     }
   }
@@ -576,19 +590,23 @@ public class BStats {
         // Null = skip the chart
         return null;
       }
+
       boolean allSkipped = true;
       for (Map.Entry<String, Integer> entry : map.entrySet()) {
         if (entry.getValue() == 0) {
           // Skip this invalid
           continue;
         }
+
         allSkipped = false;
         valuesBuilder.appendField(entry.getKey(), entry.getValue());
       }
+
       if (allSkipped) {
         // Null = skip the chart
         return null;
       }
+
       return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
     }
   }
@@ -616,19 +634,23 @@ public class BStats {
         // Null = skip the chart
         return null;
       }
+
       boolean allSkipped = true;
       for (Map.Entry<String, Integer> entry : map.entrySet()) {
         if (entry.getValue() == 0) {
           // Skip this invalid
           continue;
         }
+
         allSkipped = false;
         valuesBuilder.appendField(entry.getKey(), entry.getValue());
       }
+
       if (allSkipped) {
         // Null = skip the chart
         return null;
       }
+
       return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
     }
   }
@@ -641,6 +663,7 @@ public class BStats {
       if (chartId == null) {
         throw new IllegalArgumentException("chartId must not be null");
       }
+
       this.chartId = chartId;
     }
 
@@ -654,13 +677,16 @@ public class BStats {
           // If the data is null we don't send the chart.
           return null;
         }
+
         builder.appendField("data", data);
       } catch (Throwable t) {
         if (logErrors) {
           errorLogger.accept("Failed to get data for custom chart with id " + chartId, t);
         }
+
         return null;
       }
+
       return builder.build();
     }
 
@@ -690,9 +716,11 @@ public class BStats {
         // Null = skip the chart
         return null;
       }
+
       for (Map.Entry<String, Integer> entry : map.entrySet()) {
         valuesBuilder.appendField(entry.getKey(), new int[] {entry.getValue()});
       }
+
       return new JsonObjectBuilder().appendField("values", valuesBuilder.build()).build();
     }
   }
@@ -735,6 +763,7 @@ public class BStats {
       if (value == null) {
         throw new IllegalArgumentException("JSON value must not be null");
       }
+
       appendFieldUnescaped(key, "\"" + escape(value) + "\"");
       return this;
     }
@@ -762,6 +791,7 @@ public class BStats {
       if (object == null) {
         throw new IllegalArgumentException("JSON object must not be null");
       }
+
       appendFieldUnescaped(key, object.toString());
       return this;
     }
@@ -777,10 +807,10 @@ public class BStats {
       if (values == null) {
         throw new IllegalArgumentException("JSON values must not be null");
       }
-      String escapedValues =
-              Arrays.stream(values)
-                      .map(value -> "\"" + escape(value) + "\"")
-                      .collect(Collectors.joining(","));
+
+      String escapedValues = Arrays.stream(values)
+              .map(value -> "\"" + escape(value) + "\"")
+              .collect(Collectors.joining(","));
       appendFieldUnescaped(key, "[" + escapedValues + "]");
       return this;
     }
@@ -796,6 +826,7 @@ public class BStats {
       if (values == null) {
         throw new IllegalArgumentException("JSON values must not be null");
       }
+
       String escapedValues =
               Arrays.stream(values).mapToObj(String::valueOf).collect(Collectors.joining(","));
       appendFieldUnescaped(key, "[" + escapedValues + "]");
@@ -813,6 +844,7 @@ public class BStats {
       if (values == null) {
         throw new IllegalArgumentException("JSON values must not be null");
       }
+
       String escapedValues =
               Arrays.stream(values).map(JsonObject::toString).collect(Collectors.joining(","));
       appendFieldUnescaped(key, "[" + escapedValues + "]");
@@ -829,12 +861,15 @@ public class BStats {
       if (builder == null) {
         throw new IllegalStateException("JSON has already been built");
       }
+
       if (key == null) {
         throw new IllegalArgumentException("JSON key must not be null");
       }
+
       if (hasAtLeastOneField) {
         builder.append(",");
       }
+
       builder.append("\"").append(escape(key)).append("\":").append(escapedValue);
       hasAtLeastOneField = true;
     }
@@ -848,13 +883,14 @@ public class BStats {
       if (builder == null) {
         throw new IllegalStateException("JSON has already been built");
       }
+
       JsonObject object = new JsonObject(builder.append("}").toString());
       builder = null;
       return object;
     }
 
     /**
-     * Escapes the given string like stated in https://www.ietf.org/rfc/rfc4627.txt.
+     * Escapes the given string like stated in <a href="https://www.ietf.org/rfc/rfc4627.txt">...</a>.
      *
      * <p>This method escapes only the necessary characters '"', '\'. and '\u0000' - '\u001F'.
      * Compact escapes are not used (e.g., '\n' is escaped as "\u000a" and not as "\n").
@@ -878,6 +914,7 @@ public class BStats {
           builder.append(c);
         }
       }
+
       return builder.toString();
     }
 

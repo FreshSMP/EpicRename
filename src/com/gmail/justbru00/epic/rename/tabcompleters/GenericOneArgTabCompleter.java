@@ -9,28 +9,27 @@ import org.bukkit.command.TabCompleter;
 
 public class GenericOneArgTabCompleter implements TabCompleter {
 
-	private ArrayList<String> empty = new ArrayList<String>();
-	private ArrayList<String> firstArgument = new ArrayList<String>();
-	private String commandName;
-	
+	private final ArrayList<String> empty = new ArrayList<>();
+	private final ArrayList<String> firstArgument = new ArrayList<>();
+	private final String commandName;
+
 	public GenericOneArgTabCompleter(String _commandName, String _firstArgument) {
 		firstArgument.add(_firstArgument);
 		commandName = _commandName;
 	}
-	
+
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if (!command.getName().equalsIgnoreCase(commandName)) {
 			return null;
 		}		
-		
+
 		if (args.length == 1) {			
 			if (args[0].equals("")) {
 				return firstArgument;			
 			}
 		}		
-		
+
 		return empty;
 	}
-
 }

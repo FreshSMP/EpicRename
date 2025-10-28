@@ -3,6 +3,7 @@
  * 
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.commands.v3;
 
 import java.io.IOException;
@@ -34,13 +35,11 @@ import com.gmail.justbru00.epic.rename.utils.v3.EpicRenameOnlineAPI;
  */
 public class Import implements CommandExecutor {
 
-	private static ArrayList<UUID> playersWhoHaveConfirmed = new ArrayList<UUID>();
+	private static final ArrayList<UUID> playersWhoHaveConfirmed = new ArrayList<>();
 
 	/**
 	 * Usage:
-	 * 
 	 * import <hand,inventory> <link,rawyaml>
-	 * 
 	 * Importing an inventory forces a /import confirm before allowing a player to
 	 * import once per server restart. Importing to your hand only works if the hand
 	 * is empty.
@@ -62,10 +61,10 @@ public class Import implements CommandExecutor {
 						// /import hand
 						if (args.length == 2) {
 
-							if (mainHand == null || mainHand.getType() == Material.AIR) {
+							if (mainHand.getType() == Material.AIR) {
 
 								String link = args[1];
-								String textFromWeb = null;
+								String textFromWeb;
 
 								try {
 									textFromWeb = EpicRenameOnlineAPI.getTextFromURL(link).get();
@@ -102,16 +101,14 @@ public class Import implements CommandExecutor {
 
 								inv.setItemInMainHand(imported);
 								Messager.msgSenderWithConfigMsg("import.success", sender);
-								return true;
-							} else {
+                            } else {
 								Messager.msgSenderWithConfigMsg("import.full_hand", sender);
-								return true;
-							}
-						} else {
+                            }
+                        } else {
 							Messager.msgSenderWithConfigMsg("import.wrong_args_hand", sender);
-							return true;
-						}
-					} else if (args[0].equalsIgnoreCase("inventory") || args[0].equalsIgnoreCase("inv")
+                        }
+                        return true;
+                    } else if (args[0].equalsIgnoreCase("inventory") || args[0].equalsIgnoreCase("inv")
 							|| args[0].equalsIgnoreCase("i")) {
 						// /import inventory
 
@@ -154,21 +151,20 @@ public class Import implements CommandExecutor {
 							ItemSerialization.fillInventoryFromString(textFromWeb, p);
 
 							Messager.msgSenderWithConfigMsg("import.success", sender);
-							return true;
-						} else {
+                        } else {
 							Messager.msgSenderWithConfigMsg("import.wrong_args_inventory", sender);
-							return true;
-						}
-					} else if (args[0].equalsIgnoreCase("raw") || args[0].equalsIgnoreCase("r")) {
+                        }
+                        return true;
+                    } else if (args[0].equalsIgnoreCase("raw") || args[0].equalsIgnoreCase("r")) {
 						// /import raw
 
 						// Try to import the raw yaml text. Single item only.
-						if (mainHand == null || mainHand.getType() == Material.AIR) {
+						if (mainHand.getType() == Material.AIR) {
 							// Empty Main Hand
-							StringBuilder yamlDataBuilder = new StringBuilder("");
+							StringBuilder yamlDataBuilder = new StringBuilder();
 
 							for (int i = 1; i < args.length; i++) {
-								yamlDataBuilder.append(args[i] + " ");
+								yamlDataBuilder.append(args[i]).append(" ");
 							}
 
 							String yamlData = yamlDataBuilder.toString().trim();
@@ -185,13 +181,12 @@ public class Import implements CommandExecutor {
 
 							inv.setItemInMainHand(importedItem);
 							Messager.msgSenderWithConfigMsg("import.success", sender);
-							return true;
-						} else {
+                        } else {
 							// Must have empty hand
 							Messager.msgSenderWithConfigMsg("import.full_hand", sender);
-							return true;
-						}
-					} else if (args[0].equalsIgnoreCase("confirm")) {
+                        }
+                        return true;
+                    } else if (args[0].equalsIgnoreCase("confirm")) {
 						playersWhoHaveConfirmed.add(p.getUniqueId());
 						Messager.msgSenderWithConfigMsg("import.confirmed", sender);
 						return true;
@@ -212,5 +207,4 @@ public class Import implements CommandExecutor {
 			return true;
 		}
 	}
-
 }

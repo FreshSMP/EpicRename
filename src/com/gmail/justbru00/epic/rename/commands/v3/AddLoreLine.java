@@ -34,92 +34,92 @@ public class AddLoreLine implements CommandExecutor {
 		if (!command.getName().equalsIgnoreCase("addloreline")) {
 			return false;
 		}
-		
+
 		if (!sender.hasPermission("epicrename.addloreline")) {
 			Messager.msgSenderWithConfigMsg("addloreline.no_permission", sender);
 			return true;
 		}
-		
+
 		if (!(sender instanceof Player)) {
 			Messager.msgSenderWithConfigMsg("addloreline.wrong_sender", sender);
 			return true;
 		}
-		
+
 		Player player = (Player) sender;
 		if (!WorldChecker.checkWorld(player)) {
 			Messager.msgSenderWithConfigMsg("addloreline.disabled_world", sender);
 			return true;
 		}
-		
+
 		ItemStack inHand = RenameUtil.getInHand(player);
 		Material m = inHand.getType();
-		
+
 		if (!Blacklists.checkTextBlacklist(args, player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("setloreline.blacklisted_word_found"), player);
 			return true;
 		}
-		
+
 		if (!Blacklists.checkMaterialBlacklist(RenameUtil.getInHand(player).getType(), player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("addloreline.blacklisted_material_found"), player);
 			return true;
 		}
-		
+
 		if (!Blacklists.checkExistingName(player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("addloreline.blacklisted_existing_name_found"), player);
 			return true;
 		}
-		
+
 		if (!Blacklists.checkExistingLore(player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("addloreline.blacklisted_existing_lore_found"), player);
 			return true;
 		}
-		
+
 		if (!MaterialPermManager.checkPerms(EpicRenameCommands.ADDLORELINE, inHand, player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("addloreline.no_permission_for_material"), player);
 			return true;
 		}
-		
-		if ((m == Material.AIR || m == null)) {
+
+		if (m == Material.AIR) {
 			Messager.msgPlayer(Main.getMsgFromConfig("addloreline.cannot_edit_air"), player);		
 			return true;
 		}
-		
+
 		if (!FormattingPermManager.checkPerms(EpicRenameCommands.ADDLORELINE, args, player)) {
 			// FormattingPermManager handles the message.
 			return true;
 		}
-		
+
 		if (args.length == 0) {
 			Messager.msgPlayer(Main.getMsgFromConfig("addloreline.wrong_args"), player);
 			return true;
 		}
-		
+
 		StringBuilder builder = new StringBuilder();
-		
-		for (int i = 0; i < args.length; i++) {
-			builder.append(args[i] + " ");
-		}
-		
+
+        for (String arg : args) {
+            builder.append(arg).append(" ");
+        }
+
 		String loreToBeSet = builder.toString().trim();
-		
+
 		if (!FormattingCodeCounter.checkMinColorCodes(player, loreToBeSet, EpicRenameCommands.ADDLORELINE, true)) {
 			FormattingCodeCounter.sendMinNotReachedMsg(player, EpicRenameCommands.ADDLORELINE);
 			return true;
 		}		
-				
+
 		if (!FormattingCodeCounter.checkMaxColorCodes(player, loreToBeSet, EpicRenameCommands.ADDLORELINE, true)) {
 			FormattingCodeCounter.sendMaxReachedMsg(player, EpicRenameCommands.ADDLORELINE);
 			return true;
 		}
-		
+
 		ItemMeta im = inHand.getItemMeta();
-		
-		List<String> newLore = new ArrayList<String>();
-		
+
+		List<String> newLore = new ArrayList<>();
+
 		if (im.hasLore()) {
 			newLore = im.getLore();
 		} 
-		
+
 		newLore.add(Messager.color(loreToBeSet));		
 		im.setLore(newLore);
 		inHand.setItemMeta(im);
@@ -128,10 +128,9 @@ public class AddLoreLine implements CommandExecutor {
 		} else {
 			player.setItemInHand(inHand);
 		}		
-		
+
 		Messager.msgPlayer(Main.getMsgFromConfig("addloreline.success"), player);
-		
+
 		return true;
 	}
-
 }

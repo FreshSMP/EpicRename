@@ -1,6 +1,7 @@
 package com.gmail.justbru00.epic.rename.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -124,8 +125,8 @@ public class ConfigUpdater {
 				"&cSorry you don't have permission to perform that command.");
 		updateMessagesYmlString("epicrename.no_args", "&cType /epicrename help for commands. (No Arguments)");
 		updateMessagesYmlString("epicrename.license", "&6View license information at: http://bit.ly/2eMknxx");
-		updateMessagesYmlStringList("epicrename.help",
-				"&6/rename <name>", "&6/lore <lore>",
+		updateMessagesYmlStringList(
+                "&6/rename <name>", "&6/lore <lore>",
 				"&6/setloreline <linenum> <text>",
 				"&6/removeloreline <linenum>",
 				"&6/insertloreline <beforeLineNum> <text>",
@@ -333,7 +334,7 @@ public class ConfigUpdater {
 		updateMessagesYmlString("removelore.cannot_edit_air", "&cSorry you can't edit nothing.");
 		updateMessagesYmlString("removelore.no_permission_for_material", "&cSorry you don't have permission for that material.");
 		updateMessagesYmlString("removelore.success", "&aRemoved the lore from the item successfully.");
-		
+
 		// /hideenchantments
 		updateMessagesYmlString("hideenchantments.no_permission", "&cSorry you don't have permission to perform that command.");
 		updateMessagesYmlString("hideenchantments.wrong_sender", "&cSorry only a player can use that command.");
@@ -344,7 +345,7 @@ public class ConfigUpdater {
 		updateMessagesYmlString("hideenchantments.cannot_edit_air", "&cSorry you can't edit nothing.");
 		updateMessagesYmlString("hideenchantments.no_permission_for_material", "&cSorry you don't have permission for that material.");
 		updateMessagesYmlString("hideenchantments.success", "&aEnchantments on this item have been hidden.");
-		
+
 		// /unhideenchantments
 		updateMessagesYmlString("unhideenchantments.no_permission", "&cSorry you don't have permission to perform that command.");
 		updateMessagesYmlString("unhideenchantments.wrong_sender", "&cSorry only a player can use that command.");
@@ -355,7 +356,7 @@ public class ConfigUpdater {
 		updateMessagesYmlString("unhideenchantments.cannot_edit_air", "&cSorry you can't edit nothing.");
 		updateMessagesYmlString("unhideenchantments.no_permission_for_material", "&cSorry you don't have permission for that material.");
 		updateMessagesYmlString("unhideenchantments.success", "&aEnchantments on this item have been unhidden.");		
-		
+
 		// /addloreline
 		updateMessagesYmlString("addloreline.no_permission", "&cSorry you don't have permission to perform that command.");
 		updateMessagesYmlString("addloreline.wrong_sender", "&cSorry only a player can use that command.");
@@ -368,7 +369,7 @@ public class ConfigUpdater {
 		updateMessagesYmlString("addloreline.no_permission_for_material", "&cSorry you don''t have permission for that material.");
 		updateMessagesYmlString("addloreline.success", "&aAdded lore to the item successfully.");
 		updateMessagesYmlString("addloreline.disabled_world", "&cYou are in a disabled world.");
-		
+
 		// /editname
 		updateMessagesYmlString("editname.no_permission", "&cSorry you don't have permission to perform that command.");
 		updateMessagesYmlString("editname.wrong_sender", "&cSorry only a player can use that command.");
@@ -381,7 +382,7 @@ public class ConfigUpdater {
 		updateMessagesYmlString("editname.no_permission", "&cSorry you don't have permission to perform that command.");
 		updateMessagesYmlString("editname.no_displayname", "&cSorry that item doesn't have a display name set.");
 		updateMessagesYmlString("editname.click_to_edit", "&a&nClick on this message to start editing the name of this item.");
-		
+
 		// /editlore
 		updateMessagesYmlString("editlore.no_permission", "&cSorry you don't have permission to perform that command.");
 		updateMessagesYmlString("editlore.wrong_sender", "&cSorry only a player can use that command.");
@@ -395,7 +396,7 @@ public class ConfigUpdater {
 		updateMessagesYmlString("editlore.no_lore", "&cSorry that item doesn't have any lore set.");
 		updateMessagesYmlString("editlore.lore_content_empty", "&cSorry the lore on this item appears to have no content.");
 		updateMessagesYmlString("editlore.click_to_edit", "&a&nClick on this message to start editing the lore of this item.");
-		
+
 		// rename_character_limit
 		updateMessagesYmlString("rename_character_limit.name_too_long",
 				"&cSorry that name is too long. The character limit is {char}.");
@@ -426,7 +427,7 @@ public class ConfigUpdater {
 		updateMessagesYmlString("economy.transaction_success", "&aJust took {cost} from your balance.");
 		updateMessagesYmlString("economy.transaction_error",
 				"&cThere was a problem taking money from your balance: {error}");
-		
+
 		// xp cost
 		updateMessagesYmlString("xp.bypass", "&aYou just bypassed the experience requirement.");
 		updateMessagesYmlString("xp.transaction_success", "&aJust took {cost} experience points from your inventory.");
@@ -448,16 +449,14 @@ public class ConfigUpdater {
 		}
 	}
 
-	private static void updateMessagesYmlStringList(String path, String... updatedValue) {
-		if (!messages.isSet(path)) {
+	private static void updateMessagesYmlStringList(String... updatedValue) {
+		if (!messages.isSet("epicrename.help")) {
 			// Path doesn't exist.
-			List<String> stringList = new ArrayList<String>();
-			for (String s : updatedValue) {
-				stringList.add(s);
-			}
+			List<String> stringList = new ArrayList<>();
+            Collections.addAll(stringList, updatedValue);
 
-			messages.set(path, stringList);
-			Messager.msgConsole("[ConfigUpdater] Added " + path + " to config.yml.");
+			messages.set("epicrename.help", stringList);
+			Messager.msgConsole("[ConfigUpdater] Added " + "epicrename.help" + " to config.yml.");
 			messages.save();
 		}
 	}
@@ -492,15 +491,12 @@ public class ConfigUpdater {
 	private static void updateConfigYmlStringList(String path, String... updatedValue) {
 		if (!config.isSet(path)) {
 			// Path doesn't exist.
-			List<String> stringList = new ArrayList<String>();
-			for (String s : updatedValue) {
-				stringList.add(s);
-			}
+			List<String> stringList = new ArrayList<>();
+            Collections.addAll(stringList, updatedValue);
 
 			config.set(path, stringList);
 			Messager.msgConsole("[ConfigUpdater] Added " + path + " to config.yml.");
 			Main.getInstance().saveConfig();
 		}
 	}
-
 }

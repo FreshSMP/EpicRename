@@ -34,26 +34,20 @@ public class Lore implements CommandExecutor {
 
 							LoreUtil.loreHandle(args, player);
 
-							return true;
-						} else {
+                        } else {
 							Messager.msgPlayer(Main.getMsgFromConfig("lore.no_args"), player);
-							return true;
-						}
-
-					} else {
+                        }
+                    } else {
 						Messager.msgPlayer(Main.getMsgFromConfig("lore.no_permission"), player);
-						return true;
-					}
-
-				} else {
+                    }
+                } else {
 					Messager.msgSender(Main.getMsgFromConfig("lore.disabled_world"), sender);
-					return true;
-				}
-			} else {
+                }
+            } else {
 				Messager.msgSender(Main.getMsgFromConfig("lore.wrong_sender"), sender);
-				return true;
-			}
-		} // End /lore
+            }
+            return true;
+        } // End /lore
 
 		return false;
 	}

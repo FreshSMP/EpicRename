@@ -32,7 +32,7 @@ public class SetLoreLine implements CommandExecutor {
 
 						if (args.length > 1) {
 
-							int lineNumber = -1;
+							int lineNumber;
 
 							try {
 								lineNumber = Integer.parseInt(args[0]);
@@ -41,7 +41,7 @@ public class SetLoreLine implements CommandExecutor {
 								Messager.msgPlayer(Main.getMsgFromConfig("setloreline.not_an_int"), player);
 								return true;
 							}
-							
+
 							// Issue #80
 							if (lineNumber <= 0) {
 								Debug.send("[SetLoreLine] The number " + lineNumber + " is below or equal to 0.");
@@ -49,7 +49,7 @@ public class SetLoreLine implements CommandExecutor {
 								return true;
 							}
 							// End Issue #80
-							
+
 							// Issue #95
 							int maxLines = Main.getInstance().getConfig().getInt("setloreline_max_lines");
 							if (lineNumber > maxLines) {
@@ -58,11 +58,6 @@ public class SetLoreLine implements CommandExecutor {
 								return true;
 							}
 							// End Issue #95
-							
-							if (args.length == 1) {
-								Messager.msgPlayer(Main.getMsgFromConfig("setloreline.provide_text"), player);
-								return true;
-							}
 
 							if (RenameUtil.getInHand(player).getType() == Material.AIR
 									|| RenameUtil.getInHand(player) == null) {
@@ -73,27 +68,22 @@ public class SetLoreLine implements CommandExecutor {
 							}
 
 							LoreUtil.setLoreLine(lineNumber, player, args);
-
-							return true;
-						} else {
+                        } else {
 							Messager.msgPlayer(Main.getMsgFromConfig("setloreline.wrong_args"), player);
-							return true;
-						}
-					} else {
+                        }
+                    } else {
 						Messager.msgSender(Main.getMsgFromConfig("setloreline.disabled_world"), sender);
-						return true;
-					}
-				} else {
+                    }
+                } else {
 					Messager.msgSender(Main.getMsgFromConfig("setloreline.wrong_sender"), sender);
-					return true;
-				}
-			} else {
+                }
+            } else {
 				Messager.msgSender(Main.getMsgFromConfig("setloreline.no_permission"), sender);
-				return true;
-			}
-		} // Stop /setloreline code.
+            }
+
+            return true;
+        } // Stop /setloreline code.
 
 		return false;
 	}
-
 }

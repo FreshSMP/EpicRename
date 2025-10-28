@@ -38,26 +38,22 @@ public class Rename implements CommandExecutor {
 
 							RenameUtil.renameHandle(player, args, RENAME);
 
-							return true;
-						} else { // No Args
+                        } else { // No Args
 							Messager.msgPlayer(Main.getMsgFromConfig("rename.no_args"), player);
-							return true;
-						}
-					} else { // No basic permission.
+                        }
+                    } else { // No basic permission.
 						Messager.msgPlayer(Main.getMsgFromConfig("rename.no_permission"), player);
-						return true;
-					}
-				} else {
+                    }
+                } else {
 					Messager.msgSender(Main.getMsgFromConfig("rename.disabled_world"), sender);
-					return true;
-				}
-			} else { // Wrong sender
+                }
+            } else { // Wrong sender
 				Messager.msgSender(Main.getMsgFromConfig("rename.wrong_sender"), sender);
-				return true;
-			}
-		} // End /rename code
+            }
+
+            return true;
+        } // End /rename code
 
 		return false;
 	}
-
 }

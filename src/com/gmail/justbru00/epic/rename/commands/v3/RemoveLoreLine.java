@@ -3,6 +3,7 @@
  * 
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.commands.v3;
 
 import java.util.List;
@@ -34,33 +35,33 @@ public class RemoveLoreLine implements CommandExecutor {
 					Player player = (Player) sender;
 					if (WorldChecker.checkWorld(player)) {
 						if (args.length == 1) {
-							
+
 							// Check Material Permissions
 							if (!MaterialPermManager.checkPerms(EpicRenameCommands.REMOVELORELINE, RenameUtil.getInHand(player), player)) {
 								Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.no_permission_for_material"), player);
 								return true;
 							}
-							
+
 							// Issue #76 | Check Blacklist							
 							if (!Blacklists.checkMaterialBlacklist(RenameUtil.getInHand(player).getType(), player)) {
 								Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.blacklisted_material_found"), player);
 								return true;
 							}
 							// End Issue #76
-							
+
 							// Check Existing Name Blacklist #81
 							if (!Blacklists.checkExistingName(player)) {
 								Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.blacklisted_existing_name_found"), player);
 								return true;
 							}
-							
+
 							// Check Existing Lore Blacklist #81
 							if (!Blacklists.checkExistingLore(player)) {
 								Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.blacklisted_existing_lore_found"), player);
 								return true;
 							}
-							
-							int lineNumber = -1;
+
+							int lineNumber;
 
 							try {
 								lineNumber = Integer.parseInt(args[0]);
@@ -68,7 +69,7 @@ public class RemoveLoreLine implements CommandExecutor {
 								Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.not_an_int"), player);
 								return true;
 							}
-							
+
 							// Issue #80
 							if (lineNumber <= 0) {
 								Debug.send("[RemoveLoreLine] The number " + lineNumber + " is below or equal to 0.");
@@ -88,26 +89,24 @@ public class RemoveLoreLine implements CommandExecutor {
 									List<String> itemLore = RenameUtil.getInHand(player).getItemMeta().getLore();
 
 									if (lineNumber < (itemLore.size() + 1)) { // Line
-																				// number
-																				// exists
+                                                                              // number
+                                                                              // exists
 										itemLore.remove((lineNumber - 1));
 										ItemMeta im = RenameUtil.getInHand(player).getItemMeta();
 										im.setLore(itemLore);
 										RenameUtil.getInHand(player).setItemMeta(im);
 										Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.success"), player);
-										return true;
-									} else {
+                                    } else {
 										Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.out_of_bounds"),
 												player);
-										return true;
-									}
+                                    }
 
-								} else {
+                                } else {
 									Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.has_no_lore"), player);
-									return true;
-								}
-							}
+                                }
 
+                                return true;
+                            }
 						} else {
 							Messager.msgPlayer(Main.getMsgFromConfig("removeloreline.wrong_args"), player);
 							return true;
@@ -128,5 +127,4 @@ public class RemoveLoreLine implements CommandExecutor {
 
 		return false;
 	}
-
 }

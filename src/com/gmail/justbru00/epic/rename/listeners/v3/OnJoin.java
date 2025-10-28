@@ -3,6 +3,7 @@
  * 
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.listeners.v3;
 
 import org.bukkit.event.EventHandler;
@@ -20,5 +21,4 @@ public class OnJoin implements Listener {
 			Messager.msgPlayer("&a&lThis server uses &b&lEpic&f&lRename &a&lversion &c&l" + Main.PLUGIN_VERSION, e.getPlayer());
 		}
 	}
-	
 }

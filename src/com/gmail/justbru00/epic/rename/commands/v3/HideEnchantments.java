@@ -29,50 +29,50 @@ public class HideEnchantments implements CommandExecutor {
 		if (!command.getName().equalsIgnoreCase("hideenchantments")) {
 			return false;
 		}		
-		
+
 		if (!sender.hasPermission("epicrename.hideenchantments")) {
 			Messager.msgSenderWithConfigMsg("hideenchantments.no_permission", sender);
 		}
-		
+
 		if (!(sender instanceof Player)) {
 			Messager.msgSenderWithConfigMsg("hideenchantments.wrong_sender", sender);
 		}
-		
+
 		Player player = (Player) sender;
 		if (!WorldChecker.checkWorld(player)) {
 			Messager.msgSenderWithConfigMsg("hideenchantments.disabled_world", sender);
 			return true;
 		}
-		
+
 		ItemStack inHand = RenameUtil.getInHand(player);
 		Material m = inHand.getType();
-						
+
 		// Issue #76 | Check Blacklist
 		if (!Blacklists.checkMaterialBlacklist(RenameUtil.getInHand(player).getType(), player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("hideenchantments.blacklisted_material_found"), player);
 			return true;
 		}
 		// End Issue #76
-						
+
 		// Check Existing Name Blacklist #81
 		if (!Blacklists.checkExistingName(player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("hideenchantments.blacklisted_existing_name_found"), player);
 			return true;
 		}
-						
+
 		// Check Existing Lore Blacklist #81
 		if (!Blacklists.checkExistingLore(player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("hideenchantments.blacklisted_existing_lore_found"), player);
 			return true;
 		}
-						
+
 		// Check Material Permissions
 		if (!MaterialPermManager.checkPerms(EpicRenameCommands.HIDEENCHANTMENTS, inHand, player)) {
 			Messager.msgPlayer(Main.getMsgFromConfig("hideenchantments.no_permission_for_material"), player);
 			return true;
 		}
 
-		if ((m == Material.AIR || m == null)) {
+		if (m == Material.AIR) {
 			Messager.msgPlayer(Main.getMsgFromConfig("hideenchantments.cannot_edit_air"), player);		
 			return true;
 		}
@@ -80,10 +80,9 @@ public class HideEnchantments implements CommandExecutor {
 		ItemMeta im = inHand.getItemMeta();
 		im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		inHand.setItemMeta(im);
-		
+
 		Messager.msgPlayer(Main.getMsgFromConfig("hideenchantments.success"), player);		
-		
+
 		return true;
 	}
-
 }

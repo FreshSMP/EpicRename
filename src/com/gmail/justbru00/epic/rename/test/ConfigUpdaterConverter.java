@@ -4,6 +4,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfigUpdaterConverter {
+
 	public static void main(String[] args) throws InvalidConfigurationException {		
 		YamlConfiguration config = new YamlConfiguration();
 		config.loadFromString("rename:\r\n" + 
@@ -144,10 +145,9 @@ public class ConfigUpdaterConverter {
 				"  \r\n" + 
 				"exploit_prevention:\r\n" + 
 				"  no_grindstone_with_glowing_items: '&cYou cannot use a grindstone on a glowing item. Please remove glow from the item first with /removeglow.'  ");
-				
+
 				for (String key : config.getRoot().getKeys(true)) {
 					System.out.println("updateMessagesYmlString(\"" + key + "\", \"" + config.getString(key) + "\");");
-					//updateMessagesYmlString("rename.blacklisted_material_found", "&cSorry that material is blacklisted.");
 				}
 	}
 }

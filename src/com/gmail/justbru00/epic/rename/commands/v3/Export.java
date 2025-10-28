@@ -3,6 +3,7 @@
  * 
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.commands.v3;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ import com.gmail.justbru00.epic.rename.utils.v3.EpicRenameOnlineAPI;
  */
 public class Export implements CommandExecutor {
 	
-	private static ArrayList<UUID> playersWhoHaveConfirmed = new ArrayList<UUID>();
+	private static final ArrayList<UUID> playersWhoHaveConfirmed = new ArrayList<>();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -43,43 +44,45 @@ public class Export implements CommandExecutor {
 						String arg = args[0];
 						if (arg.equalsIgnoreCase("confirm")) { // /export confirm							
 							playersWhoHaveConfirmed.add(p.getUniqueId());
-							
+
 							Messager.msgSenderWithConfigMsg("export.confirmed", sender);
 							return true;
 						}
-						
+
 						// Check confirmation
 						if (!playersWhoHaveConfirmed.contains(p.getUniqueId())) {
 							Messager.msgSenderWithConfigMsg("export.warn_public", sender);
 							return true;
 						}
-						
+
 						if (arg.equalsIgnoreCase("hand") || arg.equalsIgnoreCase("h")) { // /export hand
 							ItemStack inHand = p.getInventory().getItemInMainHand();
-							
-							if (inHand.getType() == Material.AIR || inHand == null) {
+
+							if (inHand.getType() == Material.AIR) {
 								Messager.msgSenderWithConfigMsg("export.no_air", sender);
 								return true;
 							}
-							
+
 							String theItem = ItemSerialization.toString(inHand);
-							String response = null;
+							String response;
 							try {
 								response = EpicRenameOnlineAPI.paste(theItem);
 							} catch (MalformedURLException e) {
 								if (Main.debug) {
 									e.printStackTrace();
 								}
+
 								Messager.msgSender(Main.getMsgFromConfig("export.post_fail").replace("{error}", "MalformedURLException"), sender);
 								return true;
 							} catch (IOException e) {
 								if (Main.debug) {
 									e.printStackTrace();
 								}
+
 								Messager.msgSender(Main.getMsgFromConfig("export.post_fail").replace("{error}", "IOException"), sender);
 								return true;
 							}
-							
+
 							if (response.startsWith("ERROR:")) {
 								// FAILED
 								Messager.msgSender(Main.getMsgFromConfig("export.post_fail").replace("{error}", response), sender);
@@ -87,28 +90,30 @@ public class Export implements CommandExecutor {
 								// SUCCESS
 								Messager.msgSender(Main.getMsgFromConfig("export.success").replace("{link}", response), sender);
 							}			
-							
+
 							return true;
 						} else if (arg.equalsIgnoreCase("inventory") || arg.equalsIgnoreCase("inv") || arg.equalsIgnoreCase("i")) { // /export inventory
-							
+
 							String theInventory = ItemSerialization.toString(p.getInventory());
-							String response = null;
+							String response;
 							try {
 								response = EpicRenameOnlineAPI.paste(theInventory);
 							} catch (MalformedURLException e) {
 								if (Main.debug) {
 									e.printStackTrace();
 								}
+
 								Messager.msgSender(Main.getMsgFromConfig("export.post_fail").replace("{error}", "MalformedURLException"), sender);
 								return true;
 							} catch (IOException e) {
 								if (Main.debug) {
 									e.printStackTrace();
 								}
+
 								Messager.msgSender(Main.getMsgFromConfig("export.post_fail").replace("{error}", "IOException"), sender);
 								return true;
 							}
-							
+
 							if (response.startsWith("ERROR:")) {
 								// FAILED
 								Messager.msgSender(Main.getMsgFromConfig("export.post_fail").replace("{error}", response), sender);
@@ -116,7 +121,7 @@ public class Export implements CommandExecutor {
 								// SUCCESS
 								Messager.msgSender(Main.getMsgFromConfig("export.success").replace("{link}", response), sender);
 							}						
-							
+
 							return true;
 						} else {
 							Messager.msgSenderWithConfigMsg("export.wrong_args", sender);
@@ -139,5 +144,4 @@ public class Export implements CommandExecutor {
 			return true;
 		}
 	}
-
 }

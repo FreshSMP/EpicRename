@@ -3,14 +3,14 @@
  * 
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.enums.v3;
 
 public enum EpicRenameCommands {
 
 	RENAME, LORE, EPICRENAME, SETLORELINE, REMOVELORELINE, INSERTLORELINE, GLOW, REMOVEGLOW, ALIGN, EXPORT, IMPORT, 
 	REMOVENAME, REMOVELORE, HIDEENCHANTMENTS, UNHIDEENCHANTMENTS, ADDLORELINE, EDITNAME, EDITLORE;
-	
-	
+
 	public static String getStringName(EpicRenameCommands e) {
 		switch (e) {
 		case RENAME: {return "rename";}
@@ -34,7 +34,7 @@ public enum EpicRenameCommands {
 		default:
 			break;
 		}
+
 		return "Command not found";
 	}
-	
 }

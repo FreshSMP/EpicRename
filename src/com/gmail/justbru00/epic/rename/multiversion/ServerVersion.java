@@ -3,6 +3,7 @@
  *
  * This is licensed under the MPL Version 2.0. See license info in LICENSE.txt
  */
+
 package com.gmail.justbru00.epic.rename.multiversion;
 
 import com.gmail.justbru00.epic.rename.utils.v3.Messager;
@@ -20,26 +21,62 @@ public class ServerVersion {
     }
 
     public boolean isAtLeast(int major, int minor, int patch) {
-        if (this.major > major) return true;
-        if (this.major < major) return false;
-        if (this.minor > minor) return true;
-        if (this.minor < minor) return false;
+        if (this.major > major) {
+            return true;
+        }
+
+        if (this.major < major) {
+            return false;
+        }
+
+        if (this.minor > minor) {
+            return true;
+        }
+
+        if (this.minor < minor) {
+            return false;
+        }
+
         return this.patch >= patch;
     }
 
     public boolean isLessThan(int major, int minor, int patch) {
-        if (this.major < major) return true;
-        if (this.major > major) return false;
-        if (this.minor < minor) return true;
-        if (this.minor > minor) return false;
+        if (this.major < major) {
+            return true;
+        }
+
+        if (this.major > major) {
+            return false;
+        }
+
+        if (this.minor < minor) {
+            return true;
+        }
+
+        if (this.minor > minor) {
+            return false;
+        }
+
         return this.patch < patch;
     }
 
     public boolean isLessThanOrEqualTo(int major, int minor, int patch) {
-        if (this.major < major) return true;
-        if (this.major > major) return false;
-        if (this.minor < minor) return true;
-        if (this.minor > minor) return false;
+        if (this.major < major) {
+            return true;
+        }
+
+        if (this.major > major) {
+            return false;
+        }
+
+        if (this.minor < minor) {
+            return true;
+        }
+
+        if (this.minor > minor) {
+            return false;
+        }
+
         return this.patch <= patch;
     }
 

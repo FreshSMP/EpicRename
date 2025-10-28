@@ -8,10 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 public class ExportTabCompleter implements TabCompleter {
-	
-	private ArrayList<String> exportFirstArgumentList = new ArrayList<String>();
-	private ArrayList<String> empty = new ArrayList<String>();
-	
+
+	private final ArrayList<String> exportFirstArgumentList = new ArrayList<>();
+	private final ArrayList<String> empty = new ArrayList<>();
+
 	public ExportTabCompleter() {
 		exportFirstArgumentList.add("hand");
 		exportFirstArgumentList.add("inventory");
@@ -22,24 +22,23 @@ public class ExportTabCompleter implements TabCompleter {
 		if (!command.getName().equalsIgnoreCase("export")) {
 			return null;
 		}		
-		
+
 		if (args.length == 1) {			
 			if (!args[0].equals("")) {
 				ArrayList<String> completion = new ArrayList<String>();
-				
+
 				for (String first : exportFirstArgumentList) {
 					if (first.toLowerCase().startsWith(args[0].toLowerCase())) {
 						completion.add(first);
 					}
 				}
-				
+
 				return completion;				
 			} else {
 				return exportFirstArgumentList;
 			}
 		}		
-		
+
 		return empty;
 	}
-
 }
